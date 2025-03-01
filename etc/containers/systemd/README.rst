@@ -2,13 +2,41 @@ Quadlet for Tryton
 ==================
 The idea is to launch use quadlets and leverage on systemd's funcionality.
 
-Secrets
--------
-Make sure you create them before hand:
+Instructions
+============
+If you want to run these with administrative privileges, you can:
 
-.. code-block:: bash
+.. code-block::
 
-    # tryton | postgresql password
+    # become root
+    su -
+
+    # create the necessary secrets
     printf 'S0m3 fuck1n6 P4s5w07d.' | podman secret create tryton-postgres-password -
 
+    # copy all these files to /etc
+    cp tryton* /etc/containers/systemd
 
+    # enable tem
+    systemctl daemon-reload
+
+    # start the pod
+    systemctl start tryton-pod
+
+    # check they're running
+    podman ps
+
+    # initialize the DB
+    podman run \
+        -it \
+        --rm \
+        --pod=tryton \
+        --network=tryton.network \
+        -e DB_HOSTNAME=tryton-postgres \
+        --secret=tryton-postgres-password,type=env,target=DB_PASSWORD \
+        docker.io/tryton/tryton \
+            trytond-admin -d tryton --all
+
+If you want to run it as a rootless user:
+
+TODO
