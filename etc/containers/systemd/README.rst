@@ -6,7 +6,7 @@ Instructions
 ============
 If you want to run these with administrative privileges, you can:
 
-.. code-block::
+.. code-block:: bash
 
     # become root
     su -
