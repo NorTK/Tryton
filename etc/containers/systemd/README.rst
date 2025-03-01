@@ -32,11 +32,41 @@ If you want to run these with administrative privileges, you can:
         --rm \
         --pod=tryton \
         --network=systemd-tryton \
-        -e DB_HOSTNAME=tryton-postgres \
+        --env=DB_HOSTNAME=tryton-postgres \
         --secret=tryton-postgres-password,type=env,target=DB_PASSWORD \
         docker.io/tryton/tryton \
-            trytond-admin -d tryton --all --email=renich@nortk.com -p
+            trytond-admin -d tryton --all --email=renich@nortk.com --password
 
-If you want to run it as a rootless user:
+If you want to run it as a regular user:
 
-TODO
+.. code-block:: bash
+
+    # create the required directory
+    mkdir -p ~/.config/containers/systemd
+
+    # create the necessary secrets
+    printf 'S0m3 fuck1n6 P4s5w07d.' | podman secret create tryton-postgres-password -
+
+    # copy all these files to /etc
+    cp tryton* ~/.config/containers/systemd
+
+    # enable tem
+    systemctl --user daemon-reload
+
+    # start the pod
+    systemctl --user start tryton-pod
+
+    # check they're running
+    podman ps
+
+    # initialize the DB
+    podman run \
+        -it \
+        --rm \
+        --pod=tryton \
+        --network=systemd-tryton \
+        --env=DB_HOSTNAME=tryton-postgres \
+        --secret=tryton-postgres-password,type=env,target=DB_PASSWORD \
+        docker.io/tryton/tryton \
+            trytond-admin -d tryton --all --email=renich@nortk.com --password
+
