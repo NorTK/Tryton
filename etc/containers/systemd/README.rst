@@ -31,11 +31,11 @@ If you want to run these with administrative privileges, you can:
         -it \
         --rm \
         --pod=tryton \
-        --network=tryton.network \
+        --network=systemd-tryton \
         -e DB_HOSTNAME=tryton-postgres \
         --secret=tryton-postgres-password,type=env,target=DB_PASSWORD \
         docker.io/tryton/tryton \
-            trytond-admin -d tryton --all
+            trytond-admin -d tryton --all --email=renich@nortk.com -p
 
 If you want to run it as a rootless user:
 
